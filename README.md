@@ -1,23 +1,15 @@
-# Next.js + Jest
+# Nextjs + MUI5 + Typescript + Emotions + Jest
 
-This example shows how to configure Jest to work with Next.js.
+Boilerplate for Nextjs and material-ui 5 with some advance fixtures
 
-This includes Next.js' built-in support for Global CSS, CSS Modules, and TypeScript!
+Steps to run this project:
 
-## How to Use
+1. Run `yarn install` command
+2. Run `yarn dev` command
 
-Quickly get started using [Create Next App](https://github.com/vercel/next.js/tree/canary/packages/create-next-app#readme)!
+stack:
 
-In your terminal, run the following command:
-
-```bash
-npx create-next-app --example with-jest with-jest-app
-# or
-yarn create next-app --example with-jest with-jest-app
-```
-
-## Run Jest Tests
-
-```bash
-npm test
-```
+1. Nextjs
+2. typescript
+3. MUI
+4. Emotion
