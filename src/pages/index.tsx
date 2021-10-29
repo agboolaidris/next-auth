@@ -1,8 +1,7 @@
 import Head from 'next/head';
-import Dashboard from '../layout/dashboard';
 
 const Home = () => (
-  <Dashboard>
+  <div>
     <Head>
       <title>Create Next App</title>
       <link rel="icon" href="/favicon.ico" />
@@ -17,7 +16,7 @@ const Home = () => (
         Get started by editing <code>pages/index.js</code>
       </p>
     </main>
-  </Dashboard>
+  </div>
 );
 
 export default Home;

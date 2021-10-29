@@ -55,7 +55,7 @@ MyDocument.getInitialProps = async (ctx) => {
   // 3. app.render
   // 4. page.render
 
-  const originalRenderPage = ctx.renderPage;
+  const { renderPage: originalRenderPage } = ctx;
 
   // You can consider sharing the same emotion cache between all the SSR requests to speed up performance.
   // However, be aware that it can have global side effects.

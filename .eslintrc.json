@@ -23,6 +23,7 @@
   "plugins": ["@emotion", "testing-library"],
   "rules": {
     "react/no-unescaped-entities": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "@next/next/no-page-custom-font": "off",
     "@emotion/jsx-import": "error",
     "@emotion/no-vanilla": "error",
