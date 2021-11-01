@@ -9,6 +9,7 @@ import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Profile from './profile';
+import Search from './search';
 
 interface Props {
   handleOpenDrawer: () => void;
@@ -48,7 +49,9 @@ function AppBar({ handleOpenDrawer }: Props) {
           >
             <MenuIcon />
           </IconButton>
+          <Search />
           <Box sx={{ flexGrow: 1 }} />
+          {/* for Tablet */}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails">
               <Badge badgeContent={4} color="error">
@@ -63,6 +66,8 @@ function AppBar({ handleOpenDrawer }: Props) {
 
             <Profile />
           </Box>
+
+          {/* for mobile */}
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -142,7 +147,6 @@ function AppBar({ handleOpenDrawer }: Props) {
               >
                 <Profile handleMobileMenuClose={handleMobileMenuClose} />
               </IconButton>
-              <p>Profile</p>
             </MenuItem>
           </Menu>
         </Toolbar>

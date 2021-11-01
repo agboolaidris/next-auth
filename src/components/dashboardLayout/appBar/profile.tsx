@@ -3,11 +3,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
+import Box from '@mui/material/Box';
 import Logout from '@mui/icons-material/Logout';
 
 interface Props {
@@ -30,13 +31,19 @@ function Profile({ handleMobileMenuClose }: Props) {
   return (
     <>
       <Tooltip title="Account settings">
-        <IconButton
+        <Box
+          sx={{ display: 'flex', alignItems: 'center' }}
           onClick={handleProfileMenuOpen}
-          size="small"
-          sx={{ ml: { md: 2 } }}
         >
-          <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-        </IconButton>
+          <Avatar
+            sx={{ width: 32, height: 32, ml: { md: 2 }, cursor: 'pointer' }}
+          >
+            M
+          </Avatar>
+          <Typography component="p" sx={{ display: { md: 'none' } }}>
+            Profile
+          </Typography>
+        </Box>
       </Tooltip>
 
       <Menu
