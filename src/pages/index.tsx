@@ -1,9 +1,10 @@
-import Button from '../components/shared/button';
+import Dashboard from '../layout/dashboard';
 
-const Home = () => (
-  <div>
-    <Button>HELLO WORLD</Button>
-  </div>
-);
-
+const Home = () => {
+  return (
+    <Dashboard>
+      <h1>Dashboard pages</h1>
+    </Dashboard>
+  );
+};
 export default Home;
