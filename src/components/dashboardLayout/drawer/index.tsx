@@ -18,12 +18,12 @@ interface StyledProps {
 }
 
 const DrawerStyled = styled.div<StyledProps>`
-  width: 240px;
+  width: 300px;
   min-height: 100vh;
   transition: all 0.3s ease-in;
   background: ${({ theme }) => theme.palette.primary.main};
   transition: width 0.3s ease-in-out;
-  overflow-x: hidden;
+  overflow: hidden;
   ${({ open }) =>
     !open &&
     css`
@@ -31,7 +31,7 @@ const DrawerStyled = styled.div<StyledProps>`
       width: 0;
     `}
 
-  ${({ theme }) => theme.breakpoints.down('sm')} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     position: fixed;
     z-index: 11;
     transform: translate(-100%);
