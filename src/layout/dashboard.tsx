@@ -29,11 +29,15 @@ function Dashboard({ children }: Props) {
             : !matches
             ? '100%'
             : 'calc(100% - 240px)',
-          overflowX: 'hidden',
+          overflow: 'hidden',
+          marginLeft: !openDrawer ? '0' : !matches ? '0' : '240px',
+          height: '100vh',
         }}
       >
         <AppBar handleOpenDrawer={() => setopenDrawer(!openDrawer)} />
-        <Container sx={{ paddingY: 3 }}>{children}</Container>
+        <Box sx={{ paddingY: 3, overflow: 'auto', height: '100%' }}>
+          <Container>{children}</Container>
+        </Box>
       </Box>
     </Box>
   );

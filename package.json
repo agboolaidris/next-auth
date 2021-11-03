@@ -4,9 +4,10 @@
     "dev": "next dev",
     "lint": "next lint",
     "build": "next build",
-    "start": "next start",
+    "start": "next start  -p $PORT",
     "test": "jest --watch --env=jsdom",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci",
+    "deploy": "npm run build  && git push heroku master"
   },
   "dependencies": {
     "@emotion/react": "^11.5.0",
@@ -20,6 +21,7 @@
     "next": "latest",
     "react": "^17.0.2",
     "react-chartjs-2": "^3.3.0",
+    "react-countup": "^6.0.0",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
