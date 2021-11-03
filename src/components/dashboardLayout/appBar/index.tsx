@@ -35,7 +35,7 @@ function AppBar({ handleOpenDrawer }: Props) {
       <AppComp
         position="sticky"
         sx={{
-          background: theme.palette.grey.A100,
+          background: theme.palette.grey[50],
           zIndex: '10',
         }}
       >

@@ -15,7 +15,9 @@ function Dashboard({ children }: Props) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
-    <Box sx={{ flexGrow: 1, display: 'flex' }}>
+    <Box
+      sx={{ flexGrow: 1, display: 'flex', background: theme.palette.grey.A100 }}
+    >
       <Drawer
         open={openDrawer}
         handleOpenDrawer={() => setopenDrawer(!openDrawer)}
@@ -31,10 +33,7 @@ function Dashboard({ children }: Props) {
         }}
       >
         <AppBar handleOpenDrawer={() => setopenDrawer(!openDrawer)} />
-        <Container>
-          {children}
-          {matches ? 'true' : 'fals'}
-        </Container>
+        <Container sx={{ paddingY: 3 }}>{children}</Container>
       </Box>
     </Box>
   );
