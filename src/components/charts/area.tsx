@@ -29,25 +29,13 @@ const data = {
   ],
 };
 
-const options = {
-  scales: {
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-        },
-      },
-    ],
-  },
-};
-
 const VerticalBar = () => (
   <Card sx={{ padding: 3 }}>
     <div className="header">
       <h1 className="title">Vertical Bar Chart</h1>
       <div className="links"></div>
     </div>
-    <Bar data={data} options={options} />
+    <Bar data={data} />
   </Card>
 );
 
