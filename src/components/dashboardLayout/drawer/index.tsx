@@ -20,11 +20,10 @@ interface StyledProps {
 const DrawerStyled = styled.div<StyledProps>`
   width: 240px;
   min-height: 100vh;
-  position: fixed;
   transition: all 0.3s ease-in;
   background: ${({ theme }) => theme.palette.primary.main};
   transition: width 0.3s ease-in-out;
-  overflow: hidden;
+  overflow-x: hidden;
   ${({ open }) =>
     !open &&
     css`
