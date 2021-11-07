@@ -9,8 +9,8 @@ const VerticalBar = () => {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'],
     datasets: [
       {
-        label: 'Female',
-        data: [29, 12, 12, 4, 2, 9],
+        label: 'Net profit',
+        data: [-29, 12, 12, -4, 2, 9],
         backgroundColor: theme.palette.secondary.main,
 
         borderColor: theme.palette.secondary.light,
@@ -18,7 +18,7 @@ const VerticalBar = () => {
         borderWidth: 1,
       },
       {
-        label: 'Male',
+        label: 'Cross profit',
         data: [12, 19, 3, 5, 2, 3],
         backgroundColor: theme.palette.primary.main,
 

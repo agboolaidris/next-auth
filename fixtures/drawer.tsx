@@ -16,7 +16,7 @@ export const drawerItem = [
       {
         name: 'Basic',
         icon: <BarChartIcon />,
-        path: '/',
+        path: '/chart/basic',
       },
       {
         name: 'Advanced',

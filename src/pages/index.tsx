@@ -1,7 +1,7 @@
 import Dashboard from '../layout/dashboard';
 import Grid from '@mui/material/Grid';
-import Piechart from '../components/charts/pie';
-import { StackedBarChart } from '../components/charts/bar';
+import { PieChart } from '../components/charts/pie';
+import { VerticalBarChart } from '../components/charts/bar';
 import BasicCard from '../components/cards/basicCard';
 import ListCard from '../components/cards/listCard';
 import { Stack } from '@mui/material';
@@ -57,13 +57,13 @@ const Home = () => {
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={12} md={8}>
           <Stack spacing={3}>
-            <StackedBarChart />
+            <VerticalBarChart />
             <BasicTable />
           </Stack>
         </Grid>
         <Grid item xs={12} md={4}>
           <Stack spacing={3}>
-            <Piechart />
+            <PieChart />
             <ListCard />
           </Stack>
         </Grid>
