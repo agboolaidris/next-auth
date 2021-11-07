@@ -35,7 +35,7 @@ function AppBar({ handleOpenDrawer }: Props) {
       <AppComp
         position="sticky"
         sx={{
-          background: theme.palette.grey[50],
+          background: theme.palette.common.white,
           zIndex: '10',
         }}
       >
@@ -44,7 +44,6 @@ function AppBar({ handleOpenDrawer }: Props) {
             size="large"
             edge="start"
             aria-label="open drawer"
-            sx={{ color: theme.palette.grey['900'] }}
             onClick={handleOpenDrawer}
           >
             <MenuIcon />

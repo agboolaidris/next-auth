@@ -3,7 +3,7 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { useTheme } from '@mui/material';
 
-const VerticalBar = () => {
+export const StackedBarChart = () => {
   const theme = useTheme();
   const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'],
@@ -49,5 +49,3 @@ const VerticalBar = () => {
     </Card>
   );
 };
-
-export default VerticalBar;

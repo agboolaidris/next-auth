@@ -1,5 +1,7 @@
 import React from 'react';
-import { Box, Theme, IconButton, Avatar, Toolbar, Stack } from '@mui/material';
+import { Box, Theme, IconButton, Toolbar, Stack } from '@mui/material';
+import Image from 'next/image';
+
 import { useTheme } from '@mui/material/styles';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -35,11 +37,11 @@ const DrawerStyled = styled.div<StyledProps>`
     position: fixed;
     z-index: 11;
     transform: translate(-100%);
+    width: 240px;
     ${({ open }) =>
       !open &&
       css`
         transform: translate(0%);
-        width: 240px;
       `}
   }
 `;
@@ -53,15 +55,13 @@ function Drawer({ open, handleOpenDrawer }: Props) {
         <Toolbar>
           <Stack
             direction="row"
-            alignItems="center"
-            sx={{ color: theme.palette.grey.A100 }}
+            justifyContent="space-between"
+            sx={{
+              color: theme.palette.primary.contrastText,
+              width: '100%',
+            }}
           >
-            <Avatar
-              alt="Idris Agboola"
-              src="/react.png"
-              sx={{ width: 40, height: 40, mr: 5 }}
-            />
-            <span>I_AM_IDRIS</span>
+            <Image alt="Idris Agboola" src="/zeit.svg" width={85} height={25} />
 
             <IconButton
               size="large"
@@ -70,7 +70,6 @@ function Drawer({ open, handleOpenDrawer }: Props) {
               aria-label="open drawer"
               sx={{
                 display: { sm: 'block', md: 'none' },
-                marginLeft: '5px',
               }}
               onClick={handleOpenDrawer}
             >

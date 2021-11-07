@@ -1,48 +1,26 @@
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AddchartIcon from '@mui/icons-material/Addchart';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import WaterfallChartIcon from '@mui/icons-material/WaterfallChart';
 
 export const drawerItem = [
   {
     name: 'Dashboard',
-    icon: <InboxIcon />,
+    icon: <DashboardIcon />,
     path: '/',
-  },
-  {
-    name: 'Table',
-    icon: <DraftsIcon />,
-    path: '/',
-    children: [
-      {
-        name: 'Dashboard',
-        icon: <InboxIcon />,
-        path: '/',
-      },
-      {
-        name: 'Dashboard',
-        icon: <SendIcon />,
-        path: '/',
-      },
-    ],
   },
   {
     name: 'Chart',
-    icon: <InboxIcon />,
-    path: '/',
-  },
-  {
-    name: 'Users',
-    icon: <DraftsIcon />,
-    path: '/',
+    icon: <AddchartIcon />,
     children: [
       {
-        name: 'Dashboard',
-        icon: <InboxIcon />,
+        name: 'Basic',
+        icon: <BarChartIcon />,
         path: '/',
       },
       {
-        name: 'Dashboard',
-        icon: <SendIcon />,
+        name: 'Advanced',
+        icon: <WaterfallChartIcon />,
         path: '/',
       },
     ],

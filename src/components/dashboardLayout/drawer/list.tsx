@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import Link from 'next/link';
 import List from '@mui/material/List';
 import { useTheme } from '@mui/material/styles';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -29,33 +30,34 @@ const SubMenu = ({ item }: { item: itemProps }) => {
   };
   return (
     <>
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon sx={{ color: theme.palette.grey.A100 }}>
-          {item.icon}
-        </ListItemIcon>
-        <ListItemText
-          primary={item.name}
-          sx={{ color: theme.palette.grey.A100 }}
-        />
+      <ListItemButton
+        onClick={handleClick}
+        sx={{ color: theme.palette.primary.contrastText }}
+      >
+        <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
+        <ListItemText primary={item.name} sx={{ color: 'inherit' }} />
         {open ? (
-          <ExpandLess sx={{ color: theme.palette.grey.A100 }} />
+          <ExpandLess sx={{ color: 'inherit' }} />
         ) : (
-          <ExpandMore sx={{ color: theme.palette.grey.A100 }} />
+          <ExpandMore sx={{ color: 'inherit' }} />
         )}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
+        <List
+          component="div"
+          disablePadding
+          sx={{ color: theme.palette.primary.contrastText }}
+        >
           {item.children.length &&
             item.children.map((item, i) => (
-              <ListItemButton sx={{ pl: 4 }} key={i}>
-                <ListItemIcon sx={{ color: theme.palette.grey.A100 }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.name}
-                  sx={{ color: theme.palette.grey.A100 }}
-                />
-              </ListItemButton>
+              <Link href={item.path} passHref key={i}>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon sx={{ color: 'inherit' }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.name} sx={{ color: 'inherit' }} />
+                </ListItemButton>
+              </Link>
             ))}
         </List>
       </Collapse>
@@ -75,12 +77,16 @@ function MenuList({ items }: Props) {
       {items.map((item, i) => {
         if (!item.children) {
           return (
-            <ListItemButton sx={{ color: theme.palette.grey.A100 }} key={i}>
-              <ListItemIcon sx={{ color: theme.palette.grey.A100 }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-            </ListItemButton>
+            <Link href={item.path} passHref key={i}>
+              <ListItemButton
+                sx={{ color: theme.palette.primary.contrastText }}
+              >
+                <ListItemIcon sx={{ color: 'inherit' }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.name} />
+              </ListItemButton>
+            </Link>
           );
         } else {
           return <SubMenu item={item} key={i} />;
