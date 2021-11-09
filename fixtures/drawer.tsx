@@ -21,7 +21,7 @@ export const drawerItem = [
       {
         name: 'Advanced',
         icon: <WaterfallChartIcon />,
-        path: '/',
+        path: '/chart/advance',
       },
     ],
   },
