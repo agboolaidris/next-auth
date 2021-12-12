@@ -12,18 +12,14 @@ export const VerticalBarChart = () => {
         label: 'Female',
         data: [29, 12, 12, 4, 2, 9],
         backgroundColor: theme.palette.secondary.main,
-
         borderColor: theme.palette.secondary.light,
-
         borderWidth: 1,
       },
       {
         label: 'Male',
         data: [12, 19, 3, 5, 2, 3],
         backgroundColor: theme.palette.primary.main,
-
         borderColor: theme.palette.primary.light,
-
         borderWidth: 1,
       },
     ],

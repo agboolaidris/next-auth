@@ -35,17 +35,39 @@ export function RadarChart() {
     ],
     datasets: [
       {
-        label: '# of Votes',
+        label: 'Technology',
         data: [2, 9, 3, 5, 2, 3],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: theme.palette.warning.light,
+        borderColor: theme.palette.warning.main,
         borderWidth: 1,
       },
     ],
   };
   return (
     <Card sx={{ padding: 3 }}>
-      <Radar data={data} />;
+      <Radar
+        data={data}
+        options={{
+          plugins: {
+            title: {
+              display: true,
+              text: 'Radar Chart statistics',
+              align: 'start',
+              font: {
+                size: 20,
+              },
+            },
+            legend: {
+              align: 'start',
+              labels: {
+                usePointStyle: true,
+                boxWidth: 6,
+              },
+            },
+          },
+        }}
+      />
+      ;
     </Card>
   );
 }

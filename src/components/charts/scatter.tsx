@@ -30,7 +30,28 @@ const data = {
 };
 
 export const ScatterChart = () => (
-  <Card>
-    <Scatter data={data} />
+  <Card sx={{ padding: 3 }}>
+    <Scatter
+      data={data}
+      options={{
+        plugins: {
+          title: {
+            display: true,
+            text: 'Radar Chart statistics',
+            align: 'start',
+            font: {
+              size: 20,
+            },
+          },
+          legend: {
+            align: 'start',
+            labels: {
+              usePointStyle: true,
+              boxWidth: 6,
+            },
+          },
+        },
+      }}
+    />
   </Card>
 );
