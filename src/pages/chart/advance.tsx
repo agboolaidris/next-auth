@@ -1,6 +1,7 @@
 import Dashboard from '../../layout/dashboard';
 import Grid from '@mui/material/Grid';
 import { PieChart } from '../../components/charts/pie';
+import { RadarChart } from '../../components/charts/radar';
 import { ScatterChart } from '../../components/charts/scatter';
 import { Stack } from '@mui/material';
 
@@ -10,7 +11,8 @@ const AdvanceChart = () => {
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={12} md={8}>
           <Stack spacing={3}>
-            <ScatterChart/>
+            <ScatterChart />
+            <RadarChart />
           </Stack>
         </Grid>
         <Grid item xs={12} md={4}>
