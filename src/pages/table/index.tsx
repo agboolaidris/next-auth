@@ -5,7 +5,7 @@ import AdvancedTable from '../../components/tables/advancedTable';
 function Index() {
   return (
     <Dashboard>
-      <AdvancedTable />
+      <AdvancedTable  />
     </Dashboard>
   );
 }

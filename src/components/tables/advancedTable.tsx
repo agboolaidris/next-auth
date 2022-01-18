@@ -1,7 +1,13 @@
-import React, { useEffect, forwardRef, useRef } from 'react';
-import { useTable, Column, useSortBy } from 'react-table';
+import React, { useEffect, forwardRef, useRef, useState } from 'react';
+import {
+  useTable,
+  Column,
+  useSortBy,
+  usePagination,
+  useRowSelect,
+} from 'react-table';
 import styled from '@emotion/styled';
-import { alpha, Theme } from '@mui/material';
+import { alpha, Theme, Pagination, Box, Select, MenuItem } from '@mui/material';
 
 export type StatementData = {
   col1: string;
@@ -47,6 +53,26 @@ const TableBody = styled.tbody<{ theme?: Theme }>`
 `;
 
 export default function AdvancedTable() {
+  const IndeterminateCheckbox = forwardRef<HTMLInputElement>(
+    ({ indeterminate, ...rest }: any, ref) => {
+      const defaultRef = useRef();
+      const resolvedRef = ref || defaultRef;
+
+      useEffect(() => {
+        resolvedRef.current.indeterminate = indeterminate;
+      }, [resolvedRef, indeterminate]);
+
+      return (
+        <>
+          <input type="checkbox" ref={resolvedRef} {...rest} />
+        </>
+      );
+    }
+  );
+  IndeterminateCheckbox.displayName = 'Paragraph';
+
+  const [entry, setEntry] = useState(200);
+
   const data = React.useMemo(
     () => [
       {
@@ -119,25 +145,30 @@ export default function AdvancedTable() {
       ] as Column<StatementData>[],
     []
   );
-  const IndeterminateCheckbox = forwardRef(
-    ({ indeterminate, ...rest }, ref) => {
-      const defaultRef = useRef();
-      const resolvedRef = ref || defaultRef;
 
-      useEffect(() => {
-        resolvedRef.current.indeterminate = indeterminate;
-      }, [resolvedRef, indeterminate]);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    selectedFlatRows,
+    state: { pageIndex, pageSize, selectedRowIds },
+  } = useTable(
+    { data, columns },
+    useSortBy,
+    usePagination,
+    useRowSelect,
 
-      return (
-        <>
-          <input type="checkbox" ref={resolvedRef} {...rest} />
-        </>
-      );
-    }
-  );
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ data, columns }, useSortBy, (hooks) => {
+    (hooks) => {
       hooks.visibleColumns.push((columns) => [
         // Let's make a column for selection
         {
@@ -158,11 +189,42 @@ export default function AdvancedTable() {
           ),
         },
         ...columns,
+        {
+          id: 'action',
+          Header: () => <span>Action</span>,
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
       ]);
-    });
+    }
+  );
 
   return (
     <TableContainer>
+      <Box sx={{ padding: '10px' }}>
+        <Box>
+          
+          <Select
+            value={entry}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setEntry(Number(e.target.value));
+            }}
+            sx={{ height: '40px' }}
+            displayEmpty
+            inputProps={{ 'aria-label': 'Without label' }}
+          >
+            {[10, 20, 30, 40, 50, 200].map((pageSize) => (
+              <MenuItem key={pageSize} value={pageSize}>
+                Show {pageSize} Entries
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+      </Box>
       <Table {...getTableProps()}>
         <TableHead>
           {headerGroups.map(({ getHeaderGroupProps, headers }, index) => (
@@ -197,6 +259,72 @@ export default function AdvancedTable() {
           })}
         </TableBody>
       </Table>
+      <Box sx={{ margin: '20px auto', width: 'fit-content' }}>
+        <Pagination
+          count={10}
+          variant="outlined"
+          color="primary"
+          onChange={(e, value) => gotoPage(value)}
+        />
+      </Box>
+      <div className="pagination">
+        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {'<<'}
+        </button>{' '}
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </button>{' '}
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </button>{' '}
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {'>>'}
+        </button>{' '}
+        <span>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
+        <span>
+          | Go to page:{' '}
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+            }}
+            style={{ width: '100px' }}
+          />
+        </span>{' '}
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+        <pre>
+          <code>
+            {JSON.stringify(
+              {
+                selectedRowIds: selectedRowIds,
+                'selectedFlatRows[].original': selectedFlatRows.map(
+                  (d) => d.original
+                ),
+              },
+              null,
+              2
+            )}
+          </code>
+        </pre>
+      </div>
     </TableContainer>
   );
 }
