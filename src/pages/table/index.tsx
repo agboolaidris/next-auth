@@ -12,10 +12,10 @@ import axios from 'axios';
 function Index() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const IndeterminateCheckbox = forwardRef<HTMLInputElement>(
+  const IndeterminateCheckbox: any = forwardRef<HTMLInputElement | any>(
     ({ indeterminate, ...rest }: any, ref) => {
-      const defaultRef = useRef();
-      const resolvedRef = ref || defaultRef;
+      const defaultRef = useRef<HTMLInputElement>();
+      const resolvedRef: any = ref || defaultRef;
 
       useEffect(() => {
         resolvedRef.current.indeterminate = indeterminate;
@@ -104,6 +104,12 @@ function Index() {
       },
     },
   ];
+
+  const Search = forwardRef<HTMLInputElement>((props, ref) => {
+    return <input ref={ref} type="search" />;
+  });
+
+  Search.displayName = 'app';
 
   useEffect(() => {
     axios
