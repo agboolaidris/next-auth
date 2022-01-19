@@ -11,6 +11,7 @@ import axios from 'axios';
 
 function Index() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const IndeterminateCheckbox = forwardRef<HTMLInputElement>(
     ({ indeterminate, ...rest }: any, ref) => {
       const defaultRef = useRef();
@@ -109,16 +110,17 @@ function Index() {
       .get('/user.json')
       .then((res) => {
         setData(res.data);
-        console.log(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   }, []);
 
   return (
     <Dashboard>
-      <AdvancedTable columns={columns} data={data} />
+      <AdvancedTable columns={columns} data={data} loading={loading} />
     </Dashboard>
   );
 }
