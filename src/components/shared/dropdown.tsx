@@ -10,6 +10,7 @@ interface Props {
   children: ReactNode;
   menuTitle: ReactNode;
   tooltip?: string;
+  pointer?: boolean;
 }
 
 function DropDownMenu({
@@ -18,13 +19,14 @@ function DropDownMenu({
   children,
   menuTitle,
   tooltip,
+  pointer,
 }: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const menuId = 'primary-search-account-menu';
+
   const handleMenuClose = () => {
     setAnchorEl(null);
     if (handleMobileMenuClose) {
@@ -49,12 +51,16 @@ function DropDownMenu({
 
       <Menu
         anchorEl={anchorEl}
-        id={menuId}
+        id="long-menu"
+        MenuListProps={{
+          'aria-labelledby': 'long-button',
+        }}
         keepMounted
         PaperProps={{
           elevation: 0,
-          sx: {
+          sx: pointer && {
             overflow: 'visible',
+            left: '0px',
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1.5,
             '& .MuiAvatar-root': {

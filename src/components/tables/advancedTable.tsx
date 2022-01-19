@@ -13,14 +13,21 @@ import Search from '../dashboardLayout/appBar/search';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 import DropDownMenu from '../shared/dropdown';
-
-interface StatementData {
-  Header: string;
-  accessor: string; // accessor is the "key" in the data
-}
-
+const Button = styled.button<{ theme?: Theme }>`
+  display: flex;
+  align-items: center;
+  width: max-content;
+  padding: 0;
+  height: 25px;
+  min-width: 80px;
+  svg {
+    width: 18px;
+  }
+`;
 const TableContainer = styled.div<{ theme?: Theme }>`
   width: max-content;
   max-width: 100%;
@@ -36,12 +43,18 @@ const Table = styled.table`
 `;
 
 const TableHead = styled.thead<{ theme?: Theme }>``;
-
-const TableRow = styled.tr<{ theme?: Theme }>`
-  border-bottom: 1px solid ${({ theme }) => theme.palette.grey[400]};
-`;
 const TableData = styled.td<{ theme?: Theme }>`
   padding: 20px 20px 20px 10px;
+`;
+const TableRow = styled.tr<{ theme?: Theme }>`
+  border-bottom: 1px solid ${({ theme }) => theme.palette.grey[400]};
+  ${TableData} {
+    &:first-child {
+      ${Button} {
+        min-width: max-content;
+      }
+    }
+  }
 `;
 
 const TableBody = styled.tbody<{ theme?: Theme }>`
@@ -116,6 +129,8 @@ export default function AdvancedTable() {
             </div>
           ),
           accessor: 'id',
+          disableSortBy: true,
+          disableFilters: true,
           Cell: ({ row }) => (
             <div>
               <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
@@ -161,7 +176,8 @@ export default function AdvancedTable() {
         {
           Header: 'Column 2',
           accessor: 'col10',
-          width: '300px',
+          disableSortBy: true,
+          disableFilters: true,
           Cell: ({ cell }) => {
             const [close, setClose] = useState(false);
             return (
@@ -190,7 +206,7 @@ export default function AdvancedTable() {
             );
           },
         },
-      ] as Column<StatementData>[],
+      ] as Column[],
     []
   );
 
@@ -244,12 +260,36 @@ export default function AdvancedTable() {
           {headerGroups.map(({ getHeaderGroupProps, headers }, index) => (
             <TableRow {...getHeaderGroupProps()} key={index}>
               {headers.map(
-                ({ getHeaderProps, render, getSortByToggleProps }, i) => (
+                (
+                  {
+                    getHeaderProps,
+                    render,
+                    getSortByToggleProps,
+                    isSorted,
+                    isSortedDesc,
+                  },
+                  i
+                ) => (
                   <TableData
                     key={i}
                     {...getHeaderProps(getSortByToggleProps())}
                   >
-                    {render('Header')}
+                    <Button>
+                      {render('Header')}
+                      {
+                        <span>
+                          {isSorted ? (
+                            isSortedDesc ? (
+                              <ArrowDownwardIcon />
+                            ) : (
+                              <ArrowUpwardIcon />
+                            )
+                          ) : (
+                            ''
+                          )}
+                        </span>
+                      }
+                    </Button>
                   </TableData>
                 )
               )}
@@ -287,30 +327,6 @@ export default function AdvancedTable() {
           </strong>{' '}
         </span>
       </Box>
-
-      {/* <div className="pagination">
-        <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-
-         <pre>
-          <code>
-            {JSON.stringify(
-              {
-                selectedRowIds: selectedRowIds,
-                'selectedFlatRows[].original': selectedFlatRows.map(
-                  (d) => d.original
-                ),
-              },
-              null,
-              2
-            )}
-          </code>
-        </pre> 
-      </div> */}
     </TableContainer>
   );
 }
