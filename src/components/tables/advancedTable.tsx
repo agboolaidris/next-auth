@@ -1,4 +1,4 @@
-import React, { useEffect, forwardRef, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   useTable,
   Column,
@@ -10,20 +10,25 @@ import {
 import styled from '@emotion/styled';
 import { alpha, Theme, Pagination, Box, Select, MenuItem } from '@mui/material';
 import Search from '../dashboardLayout/appBar/search';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import IconButton from '@mui/material/IconButton';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-import DropDownMenu from '../shared/dropdown';
+interface Props {
+  columns: Column[];
+  data: object[];
+}
 const Button = styled.button<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   width: max-content;
   padding: 0;
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  outline: none;
   height: 25px;
   min-width: 80px;
+  cursor: pointer;
   svg {
     width: 18px;
   }
@@ -39,6 +44,7 @@ const TableContainer = styled.div<{ theme?: Theme }>`
 
 const Table = styled.table`
   width: max-content;
+  overflow: auto;
   border-collapse: collapse;
 `;
 
@@ -51,7 +57,7 @@ const TableRow = styled.tr<{ theme?: Theme }>`
   ${TableData} {
     &:first-child {
       ${Button} {
-        min-width: max-content;
+        min-width: 30px;
       }
     }
   }
@@ -72,158 +78,24 @@ const TableBody = styled.tbody<{ theme?: Theme }>`
   }
 `;
 
-export default function AdvancedTable() {
-  const IndeterminateCheckbox = forwardRef<HTMLInputElement>(
-    ({ indeterminate, ...rest }: any, ref) => {
-      const defaultRef = useRef();
-      const resolvedRef = ref || defaultRef;
+export default function AdvancedTable({ data, columns }: Props) {
+  const tableData = useMemo(() => data, [data]);
 
-      useEffect(() => {
-        resolvedRef.current.indeterminate = indeterminate;
-      }, [resolvedRef, indeterminate]);
-
-      return (
-        <>
-          <input type="checkbox" ref={resolvedRef} {...rest} />
-        </>
-      );
-    }
-  );
-  IndeterminateCheckbox.displayName = 'Paragraph';
-
-  const [entry, setEntry] = useState(200);
-
-  const data = React.useMemo(
-    () => [
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-    ],
-    []
-  );
-
-  const columns = React.useMemo(
-    () =>
-      [
-        {
-          Header: ({ getToggleAllPageRowsSelectedProps }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
-            </div>
-          ),
-          accessor: 'id',
-          disableSortBy: true,
-          disableFilters: true,
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-        {
-          Header: 'Column 1',
-          accessor: 'col1',
-        },
-        {
-          Header: 'Column 2',
-          accessor: 'col2',
-        },
-        {
-          Header: 'Column 1',
-          accessor: 'col3', // accessor is the "key" in the data
-        },
-        {
-          Header: 'Column 2',
-          accessor: 'col4',
-        },
-        {
-          Header: 'Column 1',
-          accessor: 'col5', // accessor is the "key" in the data
-        },
-        {
-          Header: 'Column 2',
-          accessor: 'col6',
-        },
-        {
-          Header: 'Column 1',
-          accessor: 'col7', // accessor is the "key" in the data
-        },
-        {
-          Header: 'Column 2',
-          accessor: 'col8',
-        },
-        {
-          Header: 'Column 1',
-          accessor: 'col9', // accessor is the "key" in the data
-        },
-        {
-          Header: 'Column 2',
-          accessor: 'col10',
-          disableSortBy: true,
-          disableFilters: true,
-          Cell: ({ cell }) => {
-            const [close, setClose] = useState(false);
-            return (
-              <DropDownMenu
-                tooltip="more details"
-                menuTitle={
-                  <IconButton
-                    aria-label="more"
-                    id="long-button"
-                    aria-haspopup="true"
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                }
-                close={close}
-              >
-                <MenuItem
-                  onClick={() => {
-                    setClose(!close);
-                    console.log(cell.row.values);
-                  }}
-                >
-                  <DeleteForeverIcon /> Profile
-                </MenuItem>
-              </DropDownMenu>
-            );
-          },
-        },
-      ] as Column[],
-    []
-  );
+  const tableColumns = useMemo(() => columns, [columns]);
 
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    page,
     prepareRow,
     pageOptions,
     gotoPage,
     setPageSize,
-    selectedFlatRows,
     setGlobalFilter,
-    state: { pageIndex, selectedRowIds },
+    state: { pageIndex, pageSize },
   } = useTable(
-    { data, columns },
+    { data: tableData, columns: tableColumns, initialState: { pageIndex: 2 } },
     useGlobalFilter,
     useSortBy,
     usePagination,
@@ -232,12 +104,11 @@ export default function AdvancedTable() {
 
   return (
     <TableContainer>
-      <Box sx={{ padding: '10px', display: 'flex' }}>
+      <Box sx={{ padding: '10px', display: 'flex', width: '100%' }}>
         <Select
-          value={entry}
+          value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
-            setEntry(Number(e.target.value));
           }}
           sx={{ height: '40px' }}
           displayEmpty
@@ -297,7 +168,7 @@ export default function AdvancedTable() {
           ))}
         </TableHead>
         <TableBody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
+          {page.map((row, i) => {
             prepareRow(row);
             return (
               <TableRow {...row.getRowProps()} key={i}>
@@ -313,14 +184,16 @@ export default function AdvancedTable() {
           })}
         </TableBody>
       </Table>
-      <Box sx={{ margin: '20px auto', width: 'fit-content' }}>
+      <Box
+        sx={{ margin: '20px auto', width: 'fit-content', textAlign: 'center' }}
+      >
         <Pagination
           count={pageOptions.length == 1 ? 0 : pageOptions.length}
           variant="outlined"
           color="primary"
           onChange={(e, value) => gotoPage(value)}
         />
-        <span>
+        <span style={{ marginTop: '20px', display: 'inline-block' }}>
           Page{' '}
           <strong>
             {pageIndex + 1} of {pageOptions.length}

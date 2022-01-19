@@ -7,7 +7,46 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MenuList from './list';
-import { drawerItem } from '../../../../fixtures/drawer';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AddchartIcon from '@mui/icons-material/Addchart';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import WaterfallChartIcon from '@mui/icons-material/WaterfallChart';
+import BackupTableIcon from '@mui/icons-material/BackupTable';
+
+const drawerItem = [
+  {
+    name: 'Dashboard',
+    icon: <DashboardIcon />,
+    path: '/',
+  },
+  {
+    name: 'Chart',
+    icon: <AddchartIcon />,
+    children: [
+      {
+        name: 'Basic',
+        icon: <BarChartIcon />,
+        path: '/chart/basic',
+      },
+      {
+        name: 'Advanced',
+        icon: <WaterfallChartIcon />,
+        path: '/chart/advance',
+      },
+    ],
+  },
+  {
+    name: 'Table',
+    icon: <BackupTableIcon />,
+    children: [
+      {
+        name: 'Basic',
+        icon: <BarChartIcon />,
+        path: '/table',
+      },
+    ],
+  },
+];
 
 interface Props {
   open: boolean;
