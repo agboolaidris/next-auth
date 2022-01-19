@@ -1,22 +1,24 @@
-import React from 'react';
-import MenuItem from '@mui/material/MenuItem';
+import React, { ReactNode, useEffect } from 'react';
 import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
+
 import Box from '@mui/material/Box';
-import Logout from '@mui/icons-material/Logout';
 
 interface Props {
   handleMobileMenuClose?: () => void;
-  handleMenuClose?: () => void;
+  close: boolean;
+  children: ReactNode;
+  menuTitle: ReactNode;
+  tooltip?: string;
 }
 
-function Profile({ handleMobileMenuClose }: Props) {
+function DropDownMenu({
+  handleMobileMenuClose,
+  close,
+  children,
+  menuTitle,
+  tooltip,
+}: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -29,21 +31,19 @@ function Profile({ handleMobileMenuClose }: Props) {
       handleMobileMenuClose();
     }
   };
+
+  useEffect(() => {
+    handleMenuClose();
+  }, [close]);
+
   return (
     <>
-      <Tooltip title="Account settings">
+      <Tooltip title={tooltip}>
         <Box
           sx={{ display: 'flex', alignItems: 'center' }}
           onClick={handleProfileMenuOpen}
         >
-          <Avatar
-            sx={{ width: 32, height: 32, ml: { md: 2 }, cursor: 'pointer' }}
-          >
-            M
-          </Avatar>
-          <Typography component="p" sx={{ display: { md: 'none' } }}>
-            Profile
-          </Typography>
+          {menuTitle}
         </Box>
       </Tooltip>
 
@@ -80,34 +80,10 @@ function Profile({ handleMobileMenuClose }: Props) {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
-          <Avatar /> My account
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleMenuClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
+        {children}
       </Menu>
     </>
   );
 }
 
-export default Profile;
+export default DropDownMenu;

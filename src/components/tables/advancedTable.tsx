@@ -5,14 +5,21 @@ import {
   useSortBy,
   usePagination,
   useRowSelect,
+  useGlobalFilter,
 } from 'react-table';
 import styled from '@emotion/styled';
 import { alpha, Theme, Pagination, Box, Select, MenuItem } from '@mui/material';
+import Search from '../dashboardLayout/appBar/search';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import IconButton from '@mui/material/IconButton';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-export type StatementData = {
-  col1: string;
-  col2: string;
-};
+import DropDownMenu from '../shared/dropdown';
+
+interface StatementData {
+  Header: string;
+  accessor: string; // accessor is the "key" in the data
+}
 
 const TableContainer = styled.div<{ theme?: Theme }>`
   width: max-content;
@@ -103,8 +110,21 @@ export default function AdvancedTable() {
     () =>
       [
         {
+          Header: ({ getToggleAllPageRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+            </div>
+          ),
+          accessor: 'id',
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        {
           Header: 'Column 1',
-          accessor: 'col1', // accessor is the "key" in the data
+          accessor: 'col1',
         },
         {
           Header: 'Column 2',
@@ -141,6 +161,34 @@ export default function AdvancedTable() {
         {
           Header: 'Column 2',
           accessor: 'col10',
+          width: '300px',
+          Cell: ({ cell }) => {
+            const [close, setClose] = useState(false);
+            return (
+              <DropDownMenu
+                tooltip="more details"
+                menuTitle={
+                  <IconButton
+                    aria-label="more"
+                    id="long-button"
+                    aria-haspopup="true"
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                }
+                close={close}
+              >
+                <MenuItem
+                  onClick={() => {
+                    setClose(!close);
+                    console.log(cell.row.values);
+                  }}
+                >
+                  <DeleteForeverIcon /> Profile
+                </MenuItem>
+              </DropDownMenu>
+            );
+          },
         },
       ] as Column<StatementData>[],
     []
@@ -152,77 +200,43 @@ export default function AdvancedTable() {
     headerGroups,
     rows,
     prepareRow,
-    canPreviousPage,
-    canNextPage,
     pageOptions,
-    pageCount,
     gotoPage,
-    nextPage,
-    previousPage,
     setPageSize,
     selectedFlatRows,
-    state: { pageIndex, pageSize, selectedRowIds },
+    setGlobalFilter,
+    state: { pageIndex, selectedRowIds },
   } = useTable(
     { data, columns },
+    useGlobalFilter,
     useSortBy,
     usePagination,
-    useRowSelect,
-
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        // Let's make a column for selection
-        {
-          id: 'selection',
-          // The header can use the table's getToggleAllRowsSelectedProps method
-          // to render a checkbox
-          Header: ({ getToggleAllPageRowsSelectedProps }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
-            </div>
-          ),
-          // The cell can use the individual row's getToggleRowSelectedProps method
-          // to the render a checkbox
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-        ...columns,
-        {
-          id: 'action',
-          Header: () => <span>Action</span>,
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-      ]);
-    }
+    useRowSelect
   );
 
   return (
     <TableContainer>
-      <Box sx={{ padding: '10px' }}>
-        <Box>
-          
-          <Select
-            value={entry}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-              setEntry(Number(e.target.value));
-            }}
-            sx={{ height: '40px' }}
-            displayEmpty
-            inputProps={{ 'aria-label': 'Without label' }}
-          >
-            {[10, 20, 30, 40, 50, 200].map((pageSize) => (
-              <MenuItem key={pageSize} value={pageSize}>
-                Show {pageSize} Entries
-              </MenuItem>
-            ))}
-          </Select>
+      <Box sx={{ padding: '10px', display: 'flex' }}>
+        <Select
+          value={entry}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+            setEntry(Number(e.target.value));
+          }}
+          sx={{ height: '40px' }}
+          displayEmpty
+          inputProps={{ 'aria-label': 'Without label' }}
+        >
+          {[10, 20, 30, 40, 50, 200].map((pageSize) => (
+            <MenuItem key={pageSize} value={pageSize}>
+              Show {pageSize} Entries
+            </MenuItem>
+          ))}
+        </Select>
+
+        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ width: '300px' }}>
+          <Search onChange={(value) => setGlobalFilter(value)} />
         </Box>
       </Box>
       <Table {...getTableProps()}>
@@ -261,56 +275,28 @@ export default function AdvancedTable() {
       </Table>
       <Box sx={{ margin: '20px auto', width: 'fit-content' }}>
         <Pagination
-          count={10}
+          count={pageOptions.length == 1 ? 0 : pageOptions.length}
           variant="outlined"
           color="primary"
           onChange={(e, value) => gotoPage(value)}
         />
-      </Box>
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
         <span>
           Page{' '}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
           </strong>{' '}
         </span>
+      </Box>
+
+      {/* <div className="pagination">
         <span>
-          | Go to page:{' '}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-        <pre>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
+
+         <pre>
           <code>
             {JSON.stringify(
               {
@@ -323,8 +309,8 @@ export default function AdvancedTable() {
               2
             )}
           </code>
-        </pre>
-      </div>
+        </pre> 
+      </div> */}
     </TableContainer>
   );
 }
