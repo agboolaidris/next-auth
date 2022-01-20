@@ -5,8 +5,11 @@ import {
   useBlockLayout,
   useResizeColumns,
   usePagination,
+  useSortBy,
 } from 'react-table';
 import { Theme, Box, Pagination } from '@mui/material';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 const TableContainer = styled.div<{ theme?: Theme }>`
   width: max-content;
@@ -22,6 +25,14 @@ const TableData = styled.div<{ theme?: Theme }>`
   height: 100%;
   width: 100%;
   text-align: center;
+  p {
+    display: flex;
+    justify-content: center;
+
+    svg {
+      font-size: 17px;
+    }
+  }
 `;
 
 const TableHead = styled.div<{ theme?: Theme }>`
@@ -115,6 +126,7 @@ export default function DragTable({ columns, data }) {
     },
     useBlockLayout,
     useResizeColumns,
+    useSortBy,
     usePagination
   );
 
@@ -132,12 +144,29 @@ export default function DragTable({ columns, data }) {
                   isResizing,
                   render,
                   canResize,
+                  isSortedDesc,
+                  isSorted,
+                  getSortByToggleProps,
                 },
                 i
               ) => (
-                <TableData {...getHeaderProps()} key={i}>
-                  <p> {render('Header')}</p>
+                <TableData {...getHeaderProps(getSortByToggleProps())} key={i}>
+                  <p>
+                    {render('Header')}
+                    <>
+                      {isSorted ? (
+                        isSortedDesc ? (
+                          <ArrowDownwardIcon />
+                        ) : (
+                          <ArrowUpwardIcon />
+                        )
+                      ) : (
+                        <ArrowDownwardIcon />
+                      )}
+                    </>
+                  </p>
                   {/* Use column.getResizerProps to hook up the events correctly */}
+
                   {canResize && (
                     <div
                       {...getResizerProps()}

@@ -44,6 +44,11 @@ const drawerItem = [
         icon: <BarChartIcon />,
         path: '/table',
       },
+      {
+        name: 'Drag Colunn',
+        icon: <BarChartIcon />,
+        path: '/table/drag',
+      },
     ],
   },
 ];
