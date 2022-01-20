@@ -72,6 +72,7 @@ const TableRow = styled.tr<{ theme?: Theme }>`
 `;
 
 const TableBody = styled.tbody<{ theme?: Theme }>`
+  position: relative;
   ${TableData} {
     padding: 10px;
   }
@@ -182,25 +183,39 @@ export default function AdvancedTable({ data, columns, loading }: Props) {
               ))}
             </TableHead>
             <TableBody {...getTableBodyProps()}>
-              {page.map((row, i) => {
-                prepareRow(row);
-                return (
-                  <TableRow {...row.getRowProps()} key={i}>
-                    {row.cells.map((cell, i) => {
-                      return (
-                        <TableData key={i} {...cell.getCellProps()}>
-                          {cell.render('Cell')}
-                        </TableData>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+              {page.length > 0 ? (
+                page.map((row, i) => {
+                  prepareRow(row);
+                  return (
+                    <TableRow {...row.getRowProps()} key={i}>
+                      {row.cells.map((cell, i) => {
+                        return (
+                          <TableData key={i} {...cell.getCellProps()}>
+                            {cell.render('Cell')}
+                          </TableData>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    paddingTop: '20px',
+                    transform: 'translateX(-50%)',
+                  }}
+                >
+                  <span>No Data</span>
+                </Box>
+              )}
             </TableBody>
           </Table>
           <Box
             sx={{
-              margin: '20px auto',
+              margin: '50px auto 20px',
               width: 'fit-content',
               textAlign: 'center',
             }}

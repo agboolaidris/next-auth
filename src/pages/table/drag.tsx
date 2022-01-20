@@ -1,6 +1,6 @@
 import React, { forwardRef, useRef, useState, useEffect } from 'react';
 import Dashboard from '../../layout/dashboard';
-import AdvancedTable from '../../components/tables/advancedTable';
+import AdvancedTable from '../../components/tables/dragTable';
 import { Column } from 'react-table';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
@@ -31,21 +31,6 @@ function Index() {
   IndeterminateCheckbox.displayName = 'Paragraph';
   const columns: Column[] = [
     {
-      Header: ({ getToggleAllPageRowsSelectedProps }) => (
-        <div>
-          <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
-        </div>
-      ),
-      accessor: 'check',
-      disableSortBy: true,
-      disableFilters: true,
-      Cell: ({ row }) => (
-        <div>
-          <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-        </div>
-      ),
-    },
-    {
       Header: 'First Name',
       accessor: 'firstname',
     },
@@ -75,6 +60,7 @@ function Index() {
       accessor: '',
       disableSortBy: true,
       disableFilters: true,
+      disableResizing: true,
       Cell: ({ cell }) => {
         const [close, setClose] = useState(false);
         return (
@@ -126,7 +112,7 @@ function Index() {
 
   return (
     <Dashboard>
-      <AdvancedTable columns={columns} data={data} loading={loading} />
+      <AdvancedTable columns={columns} data={data} />
     </Dashboard>
   );
 }
