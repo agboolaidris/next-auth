@@ -6,10 +6,12 @@ import {
   useResizeColumns,
   usePagination,
   useSortBy,
+  useGlobalFilter,
 } from 'react-table';
-import { Theme, Box, Pagination } from '@mui/material';
+import { Theme, Box, Pagination, MenuItem, Select } from '@mui/material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import Search from '../dashboardLayout/appBar/search';
 
 const TableContainer = styled.div<{ theme?: Theme }>`
   width: max-content;
@@ -25,6 +27,7 @@ const TableData = styled.div<{ theme?: Theme }>`
   height: 100%;
   width: 100%;
   text-align: center;
+  overflow: hidden;
   p {
     display: flex;
     justify-content: center;
@@ -116,7 +119,9 @@ export default function DragTable({ columns, data }) {
     resetResizing,
     gotoPage,
     pageOptions,
-    state: { pageIndex },
+    setGlobalFilter,
+    setPageSize,
+    state: { pageIndex, pageSize },
     page,
   } = useTable(
     {
@@ -126,6 +131,7 @@ export default function DragTable({ columns, data }) {
     },
     useBlockLayout,
     useResizeColumns,
+    useGlobalFilter,
     useSortBy,
     usePagination
   );
@@ -133,6 +139,40 @@ export default function DragTable({ columns, data }) {
   return (
     <TableContainer>
       {/* <button onClick={resetResizing}>Reset Resizing</button> */}
+
+      <Box
+        sx={{
+          padding: '10px',
+          display: 'flex',
+          alignItems: 'center',
+          minWidth: 'max-content',
+        }}
+      >
+        <Box sx={{ width: '300px' }}>
+          <Search onChange={(value) => setGlobalFilter(value)} />
+        </Box>
+
+        <Box sx={{ flexGrow: 1 }} />
+        <Box>
+          Show{' '}
+          <Select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+            }}
+            sx={{ height: '30px' }}
+            displayEmpty
+            inputProps={{ 'aria-label': 'Without label' }}
+          >
+            {[10, 20, 30, 40, 50, 200].map((pageSize) => (
+              <MenuItem key={pageSize} value={pageSize}>
+                {pageSize}
+              </MenuItem>
+            ))}
+          </Select>{' '}
+          Entries
+        </Box>
+      </Box>
       <Table {...getTableProps()}>
         {headerGroups.map((headerGroup, i) => (
           <TableHead {...headerGroup.getHeaderGroupProps()} key={i}>
@@ -179,22 +219,34 @@ export default function DragTable({ columns, data }) {
           </TableHead>
         ))}
 
-        <TableBody {...getTableBodyProps()}>
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
-              <TableRow {...row.getRowProps()} key={i}>
-                {row.cells.map((cell, i) => {
-                  return (
-                    <TableData {...cell.getCellProps()} key={i}>
-                      <p> {cell.render('Cell')}</p>
-                    </TableData>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableBody>
+        {page.length > 0 ? (
+          <TableBody {...getTableBodyProps()}>
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <TableRow {...row.getRowProps()} key={i}>
+                  {row.cells.map((cell, i) => {
+                    return (
+                      <TableData {...cell.getCellProps()} key={i}>
+                        <p> {cell.render('Cell')}</p>
+                      </TableData>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        ) : (
+          <Box
+            sx={{
+              width: 'max-content',
+              margin: '20px auto',
+            }}
+          >
+            <span>No Data</span>
+          </Box>
+        )}
+
         <Box
           sx={{
             margin: '30px auto 20px',
