@@ -1,35 +1,29 @@
-import React, { forwardRef, useRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import Dashboard from '../../layout/dashboard';
 import AdvancedTable from '../../components/tables/dragTable';
 import { Column } from 'react-table';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import DropDownMenu from '../../components/shared/dropdown';
-import { MenuItem } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import axios from 'axios';
+import Checkbox from '../../components/tables/checkBox';
 
 function Index() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const IndeterminateCheckbox: any = forwardRef<HTMLInputElement | any>(
-    ({ indeterminate, ...rest }: any, ref) => {
-      const defaultRef = useRef<HTMLInputElement>();
-      const resolvedRef: any = ref || defaultRef;
 
-      useEffect(() => {
-        resolvedRef.current.indeterminate = indeterminate;
-      }, [resolvedRef, indeterminate]);
-
-      return (
-        <>
-          <input type="checkbox" ref={resolvedRef} {...rest} />
-        </>
-      );
-    }
-  );
-  IndeterminateCheckbox.displayName = 'Paragraph';
   const columns: Column[] = [
+    {
+      Header: ({ getToggleAllPageRowsSelectedProps }) => (
+        <Checkbox {...getToggleAllPageRowsSelectedProps()} />
+      ),
+      accessor: 'check',
+      disableSortBy: true,
+      disableFilters: true,
+      width: 40,
+      Cell: ({ row }) => <Checkbox {...row.getToggleRowSelectedProps()} />,
+    },
     {
       Header: 'First Name',
       accessor: 'firstname',
@@ -62,30 +56,22 @@ function Index() {
       disableFilters: true,
       disableResizing: true,
       Cell: ({ cell }) => {
-        const [close, setClose] = useState(false);
         return (
-          <DropDownMenu
-            tooltip="more details"
-            menuTitle={
-              <IconButton
-                aria-label="more"
-                id="long-button"
-                aria-haspopup="true"
-              >
-                <MoreVertIcon />
-              </IconButton>
-            }
-            close={close}
-          >
-            <MenuItem
-              onClick={() => {
-                setClose(!close);
-                console.log(cell.row.values);
-              }}
-            >
-              <DeleteForeverIcon /> Profile
-            </MenuItem>
-          </DropDownMenu>
+          <>
+            <Stack direction="row" spacing={1}>
+              <Tooltip title="edit">
+                <IconButton aria-label="delete">
+                  <ModeEditOutlineIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="delete">
+                <IconButton aria-label="delete">
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+          </>
         );
       },
     },
@@ -104,15 +90,14 @@ function Index() {
         setData(res.data);
         setLoading(false);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         setLoading(false);
       });
   }, []);
 
   return (
     <Dashboard>
-      <AdvancedTable columns={columns} data={data} />
+      <AdvancedTable columns={columns} data={data} loading={loading} />
     </Dashboard>
   );
 }

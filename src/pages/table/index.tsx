@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import Dashboard from '../../layout/dashboard';
 import AdvancedTable from '../../components/tables/advancedTable';
 import { Column } from 'react-table';
@@ -8,40 +8,22 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DropDownMenu from '../../components/shared/dropdown';
 import { MenuItem } from '@mui/material';
 import axios from 'axios';
-
+import Checkbox from '../../components/tables/checkBox';
 function Index() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const IndeterminateCheckbox: any = forwardRef<HTMLInputElement | any>(
-    ({ indeterminate, ...rest }: any, ref) => {
-      const defaultRef = useRef<HTMLInputElement>();
-      const resolvedRef: any = ref || defaultRef;
 
-      useEffect(() => {
-        resolvedRef.current.indeterminate = indeterminate;
-      }, [resolvedRef, indeterminate]);
-
-      return (
-        <>
-          <input type="checkbox" ref={resolvedRef} {...rest} />
-        </>
-      );
-    }
-  );
-  IndeterminateCheckbox.displayName = 'Paragraph';
   const columns: Column[] = [
     {
       Header: ({ getToggleAllPageRowsSelectedProps }) => (
-        <div>
-          <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
-        </div>
+        <Checkbox {...getToggleAllPageRowsSelectedProps()} />
       ),
       accessor: 'check',
       disableSortBy: true,
       disableFilters: true,
       Cell: ({ row }) => (
         <div>
-          <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+          <Checkbox {...row.getToggleRowSelectedProps()} />
         </div>
       ),
     },

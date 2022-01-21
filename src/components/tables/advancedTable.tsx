@@ -17,7 +17,7 @@ import {
   MenuItem,
   Skeleton,
 } from '@mui/material';
-import Search from '../dashboardLayout/appBar/search';
+import Search from '../shared/search';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
@@ -63,7 +63,7 @@ const TableData = styled.td<{ theme?: Theme }>`
 const TableRow = styled.tr<{ theme?: Theme }>`
   border-bottom: 1px solid ${({ theme }) => theme.palette.grey[400]};
   ${TableData} {
-    &:first-child {
+    &:first-of-type {
       ${Button} {
         min-width: 30px;
       }
@@ -77,7 +77,7 @@ const TableBody = styled.tbody<{ theme?: Theme }>`
     padding: 10px;
   }
   ${TableRow} {
-    &:nth-child(even) {
+    &:nth-of-type(even) {
       background-color: ${({ theme }) =>
         alpha(theme.palette.grey['A100'], 0.8)};
     }

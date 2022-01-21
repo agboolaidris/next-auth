@@ -7,11 +7,20 @@ import {
   usePagination,
   useSortBy,
   useGlobalFilter,
+  Column,
+  useRowSelect,
 } from 'react-table';
 import { Theme, Box, Pagination, MenuItem, Select } from '@mui/material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import Search from '../dashboardLayout/appBar/search';
+import Search from '../shared/search';
+import { BeatLoader } from 'react-spinners';
+
+interface Props {
+  columns: Column[];
+  data: object[];
+  loading: boolean;
+}
 
 const TableContainer = styled.div<{ theme?: Theme }>`
   width: max-content;
@@ -28,10 +37,11 @@ const TableData = styled.div<{ theme?: Theme }>`
   width: 100%;
   text-align: center;
   overflow: hidden;
-  p {
+  div {
     display: flex;
     justify-content: center;
-
+    align-items: center;
+    height: 100%;
     svg {
       font-size: 17px;
     }
@@ -43,6 +53,9 @@ const TableHead = styled.div<{ theme?: Theme }>`
   ${TableData} {
     background-color: ${({ theme }) => theme.palette.grey[500]};
     color: ${({ theme }) => theme.palette.common.white};
+    &:hover {
+      background-color: ${({ theme }) => theme.palette.grey[600]};
+    }
   }
 
   .resizer {
@@ -78,16 +91,16 @@ const TableRow = styled.div<{ theme?: Theme }>`
   }
 `;
 
-const TableBody = styled.tbody<{ theme?: Theme }>`
+const TableBody = styled.div<{ theme?: Theme }>`
   position: relative;
   ${TableRow} {
-    &:nth-child(odd) {
+    &:nth-of-type(odd) {
       ${TableData} {
         background-color: ${({ theme }) => theme.palette.common.white};
       }
     }
 
-    &:nth-child(even) {
+    &:nth-of-type(even) {
       ${TableData} {
         background-color: ${({ theme }) => theme.palette.grey[100]};
       }
@@ -100,7 +113,7 @@ const Table = styled.div`
   position: relative;
 `;
 
-export default function DragTable({ columns, data }) {
+export default function DragTable({ columns, data, loading }: Props) {
   const defaultColumn = React.useMemo(
     () => ({
       minWidth: 30,
@@ -133,7 +146,8 @@ export default function DragTable({ columns, data }) {
     useResizeColumns,
     useGlobalFilter,
     useSortBy,
-    usePagination
+    usePagination,
+    useRowSelect
   );
 
   return (
@@ -191,7 +205,7 @@ export default function DragTable({ columns, data }) {
                 i
               ) => (
                 <TableData {...getHeaderProps(getSortByToggleProps())} key={i}>
-                  <p>
+                  <div>
                     {render('Header')}
                     <>
                       {isSorted ? (
@@ -201,10 +215,10 @@ export default function DragTable({ columns, data }) {
                           <ArrowUpwardIcon />
                         )
                       ) : (
-                        <ArrowDownwardIcon />
+                        ''
                       )}
                     </>
-                  </p>
+                  </div>
                   {/* Use column.getResizerProps to hook up the events correctly */}
 
                   {canResize && (
@@ -228,7 +242,7 @@ export default function DragTable({ columns, data }) {
                   {row.cells.map((cell, i) => {
                     return (
                       <TableData {...cell.getCellProps()} key={i}>
-                        <p> {cell.render('Cell')}</p>
+                        <div> {cell.render('Cell')}</div>
                       </TableData>
                     );
                   })}
@@ -243,7 +257,11 @@ export default function DragTable({ columns, data }) {
               margin: '20px auto',
             }}
           >
-            <span>No Data</span>
+            {loading ? (
+              <BeatLoader loading={loading} size={40} />
+            ) : (
+              <span>No Data</span>
+            )}
           </Box>
         )}
 
@@ -267,10 +285,6 @@ export default function DragTable({ columns, data }) {
             </strong>{' '}
           </span>
         </Box>
-
-        {/* <pre>
-          <code>{JSON.stringify(state, null, 2)}</code>
-        </pre> */}
       </Table>
     </TableContainer>
   );

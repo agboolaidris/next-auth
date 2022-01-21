@@ -9,7 +9,7 @@ import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Profile from './profile';
-import Search from './search';
+import Search from '../../shared/search';
 
 interface Props {
   handleOpenDrawer: () => void;
@@ -48,7 +48,9 @@ function AppBar({ handleOpenDrawer }: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Search />
+          <Box sx={{ width: { x: 'auto', md: '300px' } }}>
+            <Search />
+          </Box>
           <Box sx={{ flexGrow: 1 }} />
           {/* for Tablet */}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
