@@ -28,17 +28,19 @@ function Index() {
       ),
     },
     {
-      Header: 'First Name',
-      accessor: 'firstname',
+      Header: 'Full Name',
+      columns: [
+        {
+          Header: 'Last Name',
+          accessor: 'lastname', // accessor is the "key" in the data
+        },
+        {
+          Header: 'Email',
+          accessor: 'email', // accessor is the "key" in the data
+        },
+      ],
     },
-    {
-      Header: 'Last Name',
-      accessor: 'lastname', // accessor is the "key" in the data
-    },
-    {
-      Header: 'Email',
-      accessor: 'email', // accessor is the "key" in the data
-    },
+
     {
       Header: 'Role',
       accessor: 'role', // accessor is the "key" in the data
