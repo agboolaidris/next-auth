@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { getAccessToken } from 'src/contexts/useAuthStore';
+import jwt_decode from 'jwt-decode';
+import { getAccessToken, setAccessToken } from 'src/contexts/useAuthStore';
 
 export const axiosInstance = axios.create({
   baseURL: '/api',
@@ -11,12 +12,14 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     const token = getAccessToken();
     if (token) {
-      const { data } = await axios.post('/api/auth/refresh', null, {
-        withCredentials: true,
-      });
-      console.log(data);
-      config.headers.Authorization = `Berear ${getAccessToken()}`;
-      console.log(getAccessToken());
+      const { exp } = jwt_decode<any>(token);
+      if (Date.now() >= exp * 1000) {
+        const { data } = await axios.post('/api/auth/refresh', null, {
+          withCredentials: true,
+        });
+        config.headers.Authorization = `Berear ${data.accessToken}`;
+        setAccessToken(data.accessToken);
+      }
     }
 
     return config;
