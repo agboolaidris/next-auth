@@ -1,11 +1,22 @@
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import { Button } from '@ui/buttons';
 import Head from 'next/head';
+import Link from 'next/link';
+import { axiosInstance } from 'src/config/axiosInstance';
 import { Layout } from 'src/layouts';
 
 import { NextPageWithLayout } from './_app';
 
 const Home: NextPageWithLayout = () => {
+  const [me, setMe] = useState('');
+  const handleMe = async () => {
+    try {
+      const { data } = await axiosInstance.get('/users/me');
+      setMe(JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <Head>
@@ -15,9 +26,10 @@ const Home: NextPageWithLayout = () => {
         <link href="/favicon.ico" rel="icon" />
       </Head>
       <main className="container  mx-auto h-60 bg-gray-50">
-        <h1>Tailwindcss, nextjs, typescript && class-variance-authority</h1>
-        <Button size="sm">Submit</Button>
-        <Button size="md">Submit</Button>
+        <h1>{me}</h1>
+        <Button onClick={handleMe}>Submit</Button>
+
+        <Link href="/login">login</Link>
       </main>
     </>
   );
