@@ -3,10 +3,12 @@ import { cva, VariantProps } from 'class-variance-authority';
 
 const buttonstyle = cva('rounded', {
   defaultVariants: {
+    block: false,
     size: 'sm',
     variants: 'primary',
   },
   variants: {
+    block: { true: 'block w-full' },
     size: {
       md: 'py-2 px-4',
       sm: 'p-2',
@@ -26,9 +28,10 @@ export const Button = ({
   size,
   className,
   children,
+  block,
   ...rest
 }: Props) => {
-  const style = buttonstyle({ className, size, variants });
+  const style = buttonstyle({ block, className, size, variants });
   return (
     <button className={style} {...rest}>
       {children}
